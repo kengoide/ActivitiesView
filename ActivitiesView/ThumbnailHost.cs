@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using System.Xaml;
 
 namespace ActivitiesView
 {
@@ -62,16 +63,30 @@ namespace ActivitiesView
 
         protected override Size ArrangeOverride(Size finalSize)
         {
-            if (_hthumbnail != IntPtr.Zero)
+            if (_hthumbnail == IntPtr.Zero)
+                return finalSize;
+
+            Win32.SIZE thumbnailSize;
+            Win32.DwmQueryThumbnailSourceSize(_hthumbnail, out thumbnailSize);
+            double aspectRatio = (double)thumbnailSize.cx / (double)thumbnailSize.cy;
+            if (aspectRatio > 1)
             {
-                DpiScale dpi = VisualTreeHelper.GetDpi(this);
-                Point screenCoordinate = PointToScreen(new Point(0, 0));
-                _thumbnailProperties.rcDestination.left = (int)Math.Round(screenCoordinate.X);
-                _thumbnailProperties.rcDestination.top = (int)Math.Round(screenCoordinate.Y);
-                _thumbnailProperties.rcDestination.right = (int)Math.Round(screenCoordinate.X + finalSize.Width * dpi.DpiScaleX);
-                _thumbnailProperties.rcDestination.bottom = (int)Math.Round(screenCoordinate.Y + finalSize.Height * dpi.DpiScaleY);
-                Win32.DwmUpdateThumbnailProperties(_hthumbnail, ref _thumbnailProperties);
+                // Thumbnail is wide.
+                finalSize.Height /= aspectRatio;
             }
+            else
+            {
+                // Thumbnail is tall.
+                finalSize.Width *= aspectRatio;
+            }
+
+            DpiScale dpi = VisualTreeHelper.GetDpi(this);
+            Point screenCoordinate = PointToScreen(new Point(0, 0));
+            _thumbnailProperties.rcDestination.left = (int)Math.Round(screenCoordinate.X);
+            _thumbnailProperties.rcDestination.top = (int)Math.Round(screenCoordinate.Y);
+            _thumbnailProperties.rcDestination.right = (int)Math.Round(screenCoordinate.X + finalSize.Width * dpi.DpiScaleX);
+            _thumbnailProperties.rcDestination.bottom = (int)Math.Round(screenCoordinate.Y + finalSize.Height * dpi.DpiScaleY);
+            Win32.DwmUpdateThumbnailProperties(_hthumbnail, ref _thumbnailProperties);
             return finalSize;
         }
 

@@ -46,7 +46,7 @@ namespace ActivitiesView
         [DllImport("dwmapi.dll", PreserveSig = false)]
         public static extern void DwmUnregisterThumbnail(IntPtr hThumbnailId);
         [DllImport("dwmapi.dll", PreserveSig = false)]
-        public static extern SIZE DwmQueryThumbnailSourceSize(IntPtr hThumbnail);
+        public static extern void DwmQueryThumbnailSourceSize(IntPtr hThumbnail, out SIZE pSize);
 
         public const uint DWM_TNP_RECTDESTINATION = 0x00000001;
         public const uint DWM_TNP_VISIBLE = 0x00000008;
