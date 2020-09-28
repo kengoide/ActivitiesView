@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interop;
@@ -21,12 +23,28 @@ namespace ActivitiesView
         public DockItem(string executableFilePath) : base()
         {
             _filePath = executableFilePath;
-            Win32.IShellItemImageFactory imageFactory =
-                (Win32.IShellItemImageFactory)Win32.SHCreateItemFromParsingName(
-                    _filePath, IntPtr.Zero, typeof(Win32.IShellItemImageFactory).GUID);
-            IntPtr hBitmap = imageFactory.GetImage(new Win32.SIZE(256, 256), Win32.SIIGBF_BIGGERSIZEOK);
-            BitmapSource bitmapSource = Imaging.CreateBitmapSourceFromHBitmap(hBitmap, IntPtr.Zero, new Int32Rect(), BitmapSizeOptions.FromEmptyOptions());
-            SetValue(ImagePropertyKey, bitmapSource);
+            Task<IntPtr>.Run(() =>
+            {
+                Win32.IShellItemImageFactory imageFactory =
+                    (Win32.IShellItemImageFactory)Win32.SHCreateItemFromParsingName(
+                        _filePath, IntPtr.Zero, typeof(Win32.IShellItemImageFactory).GUID);
+                while (true)
+                {
+                    try
+                    {
+                        return imageFactory.GetImage(new Win32.SIZE(256, 256), Win32.SIIGBF_BIGGERSIZEOK);
+                    }
+                    catch (COMException e) when (e.HResult == Win32.E_PENDING)
+                    {
+                        Thread.Sleep(10);
+                    }
+                }
+            }).ContinueWith(task =>
+            {
+                BitmapSource bitmapSource = Imaging.CreateBitmapSourceFromHBitmap(
+                    task.Result, IntPtr.Zero, new Int32Rect(), BitmapSizeOptions.FromEmptyOptions());
+                SetValue(ImagePropertyKey, bitmapSource);
+            }, TaskScheduler.FromCurrentSynchronizationContext());
         }
 
         public string FilePath { get => _filePath; }

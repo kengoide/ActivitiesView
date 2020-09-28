@@ -41,6 +41,8 @@ namespace ActivitiesView
             }
         }
 
+        public const int E_PENDING = unchecked((int)0x8000000a);
+
         [DllImport("dwmapi.dll", PreserveSig = false)]
         public static extern IntPtr DwmRegisterThumbnail(IntPtr hwndDestination, IntPtr hwndSource);
         [DllImport("dwmapi.dll", PreserveSig = false)]
