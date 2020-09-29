@@ -15,14 +15,23 @@ namespace ActivitiesView
     class DockItem : DependencyObject
     {
         private string _filePath;
+        private string _displayName;
+        private string _description;
+        private ProcessStartInfo _processStartInfo;
 
         private static readonly DependencyPropertyKey ImagePropertyKey =
             DependencyProperty.RegisterReadOnly("Image", typeof(BitmapSource), typeof(DockItem), new PropertyMetadata());
         public static readonly DependencyProperty ImageProperty = ImagePropertyKey.DependencyProperty;
 
-        public DockItem(string executableFilePath) : base()
+        public DockItem(string executableFilePath, string arguments, string workingDirectory,
+                        string displayName, string description, int showCommand) : base()
         {
             _filePath = executableFilePath;
+            _displayName = displayName;
+            _description = description;
+            _processStartInfo = new ProcessStartInfo(executableFilePath, arguments);
+            _processStartInfo.WorkingDirectory = workingDirectory;
+
             Task<IntPtr>.Run(() =>
             {
                 Win32.IShellItemImageFactory imageFactory =
@@ -48,11 +57,13 @@ namespace ActivitiesView
         }
 
         public string FilePath { get => _filePath; }
+        public string DisplayName { get => _displayName; }
+        public string Description { get => _description; }
         public BitmapSource Image { get => (BitmapSource)GetValue(ImageProperty); }
 
         public void Launch()
         {
-            Process.Start(_filePath);
+            Process.Start(_processStartInfo);
         }
     }
 }

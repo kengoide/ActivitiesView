@@ -39,13 +39,22 @@ namespace ActivitiesView
             foreach (string fileName in Directory.EnumerateFiles("DockShortcuts")
                                                  .Where(name => name.EndsWith(".lnk")))
             {
-                string absoluteFilePath = AppDomain.CurrentDomain.BaseDirectory + fileName;
+                string linkFilePath = AppDomain.CurrentDomain.BaseDirectory + fileName;
                 Win32.IShellLinkW shellLink = (Win32.IShellLinkW)new Win32.ShellLink();
                 Win32.IPersistFile persistFile = (Win32.IPersistFile)shellLink;
-                persistFile.Load(absoluteFilePath, Win32.STGM_READ);
+                persistFile.Load(linkFilePath, Win32.STGM_READ);
                 shellLink.Resolve(IntPtr.Zero, Win32.SLR_NO_UI);
                 shellLink.GetPath(buffer, buffer.Capacity, IntPtr.Zero, 0);
-                _dockItems.Add(new DockItem(buffer.ToString()));
+                string path = buffer.ToString();
+                shellLink.GetArguments(buffer, buffer.Capacity);
+                string arguments = buffer.ToString();
+                shellLink.GetWorkingDirectory(buffer, buffer.Capacity);
+                string workingDirectory = buffer.ToString();
+                shellLink.GetDescription(buffer, buffer.Capacity);
+                string description = buffer.ToString();
+                int showCommand = shellLink.GetShowCmd();
+                string displayName = fileName.Remove(fileName.Length - 4);
+                _dockItems.Add(new DockItem(path, arguments, workingDirectory, displayName, description, showCommand));
             }
         }
 
