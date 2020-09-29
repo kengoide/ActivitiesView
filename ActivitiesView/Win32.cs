@@ -41,6 +41,8 @@ namespace ActivitiesView
             }
         }
 
+        public const int MAX_PATH = 260;
+
         public const int E_PENDING = unchecked((int)0x8000000a);
 
         [DllImport("dwmapi.dll", PreserveSig = false)]
@@ -66,6 +68,56 @@ namespace ActivitiesView
 
         [DllImport("dwmapi.dll", PreserveSig = false)]
         public static extern void DwmUpdateThumbnailProperties(IntPtr hThumbnailId, [In] ref DWM_THUMBNAIL_PROPERTIES ptnProperties);
+
+        [ComImport]
+        [Guid("00021401-0000-0000-c000-000000000046")]
+        public class ShellLink { }
+
+        public const uint SLR_NO_UI = 0x0000;
+        public const uint SLGP_SHORTPATH = 0x1;
+
+        [ComImport]
+        [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+        [Guid("000214f9-0000-0000-c000-000000000046")]
+        public interface IShellLinkW
+        {
+            void GetPath([MarshalAs(UnmanagedType.LPWStr), Out] StringBuilder pszFile, int cch, IntPtr pfd, uint fFlags);
+            IntPtr GetIDList();
+            void SetIDList(IntPtr pidl);
+            void GetDescription([MarshalAs(UnmanagedType.LPWStr), Out] StringBuilder pszName, int cch);
+            void SetDescription([In] string pszName);
+            void GetWorkingDirectory([MarshalAs(UnmanagedType.LPWStr), Out] StringBuilder pszDir, int cch);
+            void SetWorkingDirectory([In] string pszDir);
+            void GetArguments([MarshalAs(UnmanagedType.LPWStr), Out] StringBuilder pszArgs, int cch);
+            void SetArguments([In] string pszArgs);
+            ushort GetHotkey();
+            void SetHotkey(ushort wHotkey);
+            int GetShowCmd();
+            void SetShowCmd(int iShowCmd);
+            void GetIconLocation([MarshalAs(UnmanagedType.LPWStr), Out] StringBuilder pszIconPath, int cch, out int piIcon);
+            void SetIconLocation([In] string pszIconPath, int iIcon);
+            void SetRelativePath([In] string pszPathRel, uint dwReserved);
+            void Resolve(IntPtr hwnd, uint fFlags);
+            void SetPath([In] string pszFile);
+        }
+
+        public const uint STGM_READ = 0x00000000;
+
+        [ComImport]
+        [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+        [Guid("0000010b-0000-0000-C000-000000000046")]
+        public interface IPersistFile // : IPersist
+        {
+            // IPersist
+            Guid GetClassID();
+            // IPersistFile
+            [PreserveSig]
+            int IsDirty();
+            void Load([In] string pszFileName, uint dwMode);
+            void Save([In] string pszFileName, bool fRemember);
+            void SaveCompleted([In] string pszFileName);
+            string GetCurFile();
+        }
 
         public const uint SIIGBF_BIGGERSIZEOK = 0x00000001;
 
