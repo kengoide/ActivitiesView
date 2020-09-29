@@ -32,9 +32,6 @@ namespace ActivitiesView
                 ((DesktopWindow)o).BringToForeground();
                 Application.Current.MainWindow.Close();
             });
-            _dockItems.Add(new DockItem(@"C:\Windows\system32\notepad.exe"));
-            _dockItems.Add(new DockItem(@"C:\Program Files\Firefox Nightly\firefox.exe"));
-            _dockItems.Add(new DockItem(@"C:\Program Files (x86)\Mozilla Thunderbird\thunderbird.exe"));
         }
 
         public ObservableCollection<DockItem> DockItems { get => _dockItems; }
