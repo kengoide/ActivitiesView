@@ -53,7 +53,7 @@ namespace ActivitiesView
                 shellLink.GetDescription(buffer, buffer.Capacity);
                 string description = buffer.ToString();
                 int showCommand = shellLink.GetShowCmd();
-                string displayName = fileName.Remove(fileName.Length - 4);
+                string displayName = Path.GetFileNameWithoutExtension(linkFilePath);
                 _dockItems.Add(new DockItem(path, arguments, workingDirectory, displayName, description, showCommand));
             }
         }

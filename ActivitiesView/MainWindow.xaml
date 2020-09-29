@@ -31,6 +31,12 @@
                         <Button.Content>
                             <Image Source="{Binding Image}"/>
                         </Button.Content>
+                        <Button.ToolTip>
+                            <StackPanel Orientation="Vertical">
+                                <Label Content="{Binding DisplayName}" FontWeight="Bold"/>
+                                <Label Content="{Binding Description}"/>
+                            </StackPanel>
+                        </Button.ToolTip>
                     </Button>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
