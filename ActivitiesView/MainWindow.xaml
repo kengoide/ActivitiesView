@@ -34,7 +34,17 @@
                         <Button.ToolTip>
                             <StackPanel Orientation="Vertical">
                                 <Label Content="{Binding DisplayName}" FontWeight="Bold"/>
-                                <Label Content="{Binding Description}"/>
+                                <Label Content="{Binding Description}">
+                                    <Label.Style>
+                                        <Style TargetType="Label">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Description}" Value="">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Label.Style>
+                                </Label>
                             </StackPanel>
                         </Button.ToolTip>
                     </Button>
