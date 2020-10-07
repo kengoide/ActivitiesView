@@ -17,19 +17,38 @@ namespace ActivitiesView
         {
             _windows = new ObservableCollection<DesktopWindow>();
             GCHandle gch = GCHandle.Alloc(this);
-            Win32.EnumDesktopWindows(IntPtr.Zero, EnumProc, GCHandle.ToIntPtr(gch));
+            Win32.EnumDesktopWindows(IntPtr.Zero, EnumDesktopProc, GCHandle.ToIntPtr(gch));
             gch.Free();
         }
 
         public ObservableCollection<DesktopWindow> Windows { get => _windows; }
 
-        private static bool EnumProc(IntPtr hwnd, IntPtr lParam)
+        private static StringBuilder buffer = new StringBuilder(64);
+
+        private static bool EnumDesktopProc(IntPtr hwnd, IntPtr lParam)
         {
+            Win32.GetClassNameW(hwnd, buffer, buffer.Capacity);
+            if (buffer.ToString() == "Windows.UI.Core.CoreWindow")
+                return true;
+            if (buffer.ToString() == "ApplicationFrameWindow")
+            {
+                // UWP application.
+                bool isPhantom = true;
+                Win32.EnumChildWindows(hwnd, (hwndChild, _) =>
+                {
+                    Win32.GetClassNameW(hwndChild, buffer, buffer.Capacity);
+                    if (buffer.ToString() == "Windows.UI.Core.CoreWindow")
+                        isPhantom = false;
+                    return true;
+                }, IntPtr.Zero);
+                if (isPhantom)
+                    return true;
+            }
+
             uint style = Win32.GetWindowLongW(hwnd, Win32.GWL_STYLE);
             uint exStyle = Win32.GetWindowLongW(hwnd, Win32.GWL_EXSTYLE);
             bool hasTaskbarButton = true;
-            if (Convert.ToBoolean(style & Win32.WS_POPUP) ||
-                Convert.ToBoolean(style & Win32.WS_DISABLED) ||
+            if (Convert.ToBoolean(style & Win32.WS_DISABLED) ||
                 !Convert.ToBoolean(style & Win32.WS_VISIBLE) ||
                 Convert.ToBoolean(exStyle & Win32.WS_EX_TOOLWINDOW))
                 hasTaskbarButton = false;

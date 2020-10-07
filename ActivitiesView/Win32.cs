@@ -129,6 +129,9 @@ namespace ActivitiesView
         public static extern object SHCreateItemFromParsingName([In] string pszPath, IntPtr pbc, [MarshalAs(UnmanagedType.LPStruct)] Guid riid);
         
         [DllImport("user32.dll", CharSet = CharSet.Unicode, ExactSpelling = true)]
+        public static extern int GetClassNameW(IntPtr hWnd,
+            [MarshalAs(UnmanagedType.LPWStr), Out] StringBuilder lpClassName, int nMaxCount);
+        [DllImport("user32.dll", CharSet = CharSet.Unicode, ExactSpelling = true)]
         public static extern int GetWindowTextW(IntPtr hWnd,
             [MarshalAs(UnmanagedType.LPWStr), Out] StringBuilder lpString, int nMaxCount);
 
@@ -148,6 +151,8 @@ namespace ActivitiesView
 
         [DllImport("user32.dll")]
         public static extern bool EnumDesktopWindows(IntPtr hDesktop, WNDENUMPROC lpfn, IntPtr lParam);
+        [DllImport("user32.dll")]
+        public static extern bool EnumChildWindows(IntPtr hWndParent, WNDENUMPROC lpEnumFunc, IntPtr lParam);
         [DllImport("user32.dll")]
         public static extern bool SetForegroundWindow(IntPtr hWnd);
     }
