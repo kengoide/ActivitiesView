@@ -97,11 +97,11 @@
                         </b:Interaction.Triggers>
                         <Grid Width="400">
                             <Grid.RowDefinitions>
-                                <RowDefinition/>
                                 <RowDefinition Height="25"/>
+                                <RowDefinition/>
                             </Grid.RowDefinitions>
-                            <local:ThumbnailHost Grid.Row="0" Height="320" SourceHwnd="{Binding Hwnd}"/>
-                            <Label Grid.Row="1" Content="{Binding WindowText}" Background="Transparent" Foreground="WhiteSmoke"/>
+                            <Label Grid.Row="0" Content="{Binding WindowText}" Background="Transparent" Foreground="WhiteSmoke"/>
+                            <local:ThumbnailHost Grid.Row="1" Height="320" SourceHwnd="{Binding Hwnd}"/>
                         </Grid>
                     </Border>
                 </DataTemplate>
