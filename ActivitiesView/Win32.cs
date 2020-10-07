@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 
 namespace ActivitiesView
 {
@@ -111,8 +107,7 @@ namespace ActivitiesView
             // IPersist
             Guid GetClassID();
             // IPersistFile
-            [PreserveSig]
-            int IsDirty();
+            void IsDirty();
             void Load([In] string pszFileName, uint dwMode);
             void Save([In] string pszFileName, bool fRemember);
             void SaveCompleted([In] string pszFileName);
