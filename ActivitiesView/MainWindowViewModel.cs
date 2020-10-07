@@ -36,8 +36,16 @@ namespace ActivitiesView
             });
 
             StringBuilder buffer = new StringBuilder(Win32.MAX_PATH);
-            foreach (string fileName in Directory.EnumerateFiles("DockShortcuts")
-                                                 .Where(name => name.EndsWith(".lnk")))
+            IEnumerable<string> e;
+            try
+            {
+                e = Directory.EnumerateFiles("DockShortcuts");
+            }
+            catch (DirectoryNotFoundException)
+            {
+                return;
+            }
+            foreach (string fileName in e.Where(name => name.EndsWith(".lnk")))
             {
                 string linkFilePath = AppDomain.CurrentDomain.BaseDirectory + fileName;
                 Win32.IShellLinkW shellLink = (Win32.IShellLinkW)new Win32.ShellLink();
