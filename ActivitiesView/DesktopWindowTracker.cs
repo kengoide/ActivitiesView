@@ -11,7 +11,7 @@ namespace ActivitiesView
 {
     class DesktopWindowTracker
     {
-        private ObservableCollection<DesktopWindow> _windows;
+        private readonly ObservableCollection<DesktopWindow> _windows;
 
         public DesktopWindowTracker()
         {
@@ -23,7 +23,7 @@ namespace ActivitiesView
 
         public ObservableCollection<DesktopWindow> Windows { get => _windows; }
 
-        private static StringBuilder buffer = new StringBuilder(64);
+        private static readonly StringBuilder buffer = new StringBuilder(64);
 
         private static bool EnumDesktopProc(IntPtr hwnd, IntPtr lParam)
         {

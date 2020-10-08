@@ -14,10 +14,10 @@ namespace ActivitiesView
 {
     class DockItem : DependencyObject
     {
-        private string _filePath;
-        private string _displayName;
-        private string _description;
-        private ProcessStartInfo _processStartInfo;
+        private readonly string _filePath;
+        private readonly string _displayName;
+        private readonly string _description;
+        private readonly ProcessStartInfo _processStartInfo;
 
         private static readonly DependencyPropertyKey ImagePropertyKey =
             DependencyProperty.RegisterReadOnly("Image", typeof(BitmapSource), typeof(DockItem), new PropertyMetadata());

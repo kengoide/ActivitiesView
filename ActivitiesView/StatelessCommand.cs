@@ -9,7 +9,7 @@ namespace ActivitiesView
 {
     class StatelessCommand : ICommand
     {
-        private Action<object> _action;
+        private readonly Action<object> _action;
 
         public StatelessCommand(Action action) : this((_) => action())
         {

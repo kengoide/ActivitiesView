@@ -13,8 +13,8 @@ namespace ActivitiesView
 {
     class MainWindowViewModel
     {
-        private ObservableCollection<DockItem> _dockItems;
-        private DesktopWindowTracker _windowTracker;
+        private readonly ObservableCollection<DockItem> _dockItems;
+        private readonly DesktopWindowTracker _windowTracker;
         private readonly StatelessCommand _closeViewCommand;
         private readonly StatelessCommand _launchCommand;
         private readonly StatelessCommand _selectWindowCommand;

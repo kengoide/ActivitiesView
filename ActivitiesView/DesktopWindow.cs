@@ -8,9 +8,9 @@ namespace ActivitiesView
 {
     class DesktopWindow
     {
-        private IntPtr _hwnd;
-        private string _windowText;
-        private static StringBuilder stringBuffer = new StringBuilder(256);
+        private readonly IntPtr _hwnd;
+        private readonly string _windowText;
+        private static readonly StringBuilder stringBuffer = new StringBuilder(256);
 
         public DesktopWindow(IntPtr hwnd)
         {
