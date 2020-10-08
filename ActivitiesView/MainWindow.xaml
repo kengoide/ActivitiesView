@@ -56,14 +56,13 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Button Command="{Binding DataContext.LaunchCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                            CommandParameter="{Binding}" Style="{StaticResource DockButtonStyle}">
+                    <Button Command="{Binding LaunchCommand}" Style="{StaticResource DockButtonStyle}">
                         <Button.Content>
                             <Image Source="{Binding Image}"/>
                         </Button.Content>
                         <Button.ToolTip>
                             <StackPanel Orientation="Vertical">
-                                <Label Content="{Binding DisplayName}" FontWeight="Bold"/>
+                                <Label Content="{Binding Name}" FontWeight="Bold"/>
                                 <Label Content="{Binding Description}">
                                     <Label.Style>
                                         <Style TargetType="Label">
