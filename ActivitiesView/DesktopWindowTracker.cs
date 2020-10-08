@@ -9,16 +9,16 @@ using System.Threading.Tasks;
 
 namespace ActivitiesView {
     class DesktopWindowTracker {
-        private readonly ObservableCollection<DesktopWindow> _windows;
+        private readonly List<DesktopWindow> _windows;
 
         public DesktopWindowTracker() {
-            _windows = new ObservableCollection<DesktopWindow>();
+            _windows = new List<DesktopWindow>();
             GCHandle gch = GCHandle.Alloc(this);
             Win32.EnumDesktopWindows(IntPtr.Zero, EnumDesktopProc, GCHandle.ToIntPtr(gch));
             gch.Free();
         }
 
-        public ObservableCollection<DesktopWindow> Windows { get => _windows; }
+        public List<DesktopWindow> Windows { get => _windows; }
 
         private static readonly StringBuilder buffer = new StringBuilder(64);
 

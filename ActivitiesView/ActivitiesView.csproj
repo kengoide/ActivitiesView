@@ -58,6 +58,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="DesktopWindowViewModel.cs" />
     <Compile Include="DockItemsLoader.cs" />
     <Compile Include="DockItemViewModel.cs" />
     <Compile Include="StatelessCommand.cs" />

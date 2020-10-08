@@ -80,7 +80,7 @@
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
-        <ItemsControl ItemsSource="{Binding WindowTracker.Windows}">
+        <ItemsControl ItemsSource="{Binding Windows}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel Margin="50" VerticalAlignment="Center"/>
@@ -91,7 +91,7 @@
                     <Border BorderThickness="2" Margin="5" BorderBrush="LightGray">
                         <b:Interaction.Triggers>
                             <b:EventTrigger EventName="MouseLeftButtonUp">
-                                <b:InvokeCommandAction Command="{Binding DataContext.SelectWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}"/>
+                                <b:InvokeCommandAction Command="{Binding SelectCommand}"/>
                             </b:EventTrigger>
                         </b:Interaction.Triggers>
                         <Grid Width="400">
@@ -103,8 +103,8 @@
                                 <RowDefinition Height="25"/>
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
-                            <Label Grid.Column="0" Grid.Row="0" Content="{Binding WindowText}" Background="Transparent" Foreground="WhiteSmoke"/>
-                            <Button Grid.Column="1" Grid.Row="0" Command="{Binding DataContext.CloseWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}">×</Button>
+                            <Label Grid.Column="0" Grid.Row="0" Content="{Binding Title}" Background="Transparent" Foreground="WhiteSmoke"/>
+                            <Button Grid.Column="1" Grid.Row="0" Command="{Binding CloseCommand}">×</Button>
                             <local:ThumbnailHost Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Height="320" SourceHwnd="{Binding Hwnd}"/>
                         </Grid>
                     </Border>
