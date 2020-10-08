@@ -147,6 +147,11 @@ namespace ActivitiesView
         [DllImport("user32.dll", CharSet = CharSet.Unicode, ExactSpelling = true)]
         public static extern uint GetWindowLongW(IntPtr hWnd, int nIndex);
 
+        public const int WM_CLOSE = 0x0010;
+
+        [DllImport("user32.dll", CharSet = CharSet.Unicode, ExactSpelling = true)]
+        public static extern bool PostMessageW(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+
         public delegate bool WNDENUMPROC(IntPtr hwnd, IntPtr lParam);
 
         [DllImport("user32.dll")]

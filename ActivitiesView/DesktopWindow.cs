@@ -26,5 +26,10 @@ namespace ActivitiesView
         {
             Win32.SetForegroundWindow(_hwnd);
         }
+
+        public void Close()
+        {
+            Win32.PostMessageW(_hwnd, Win32.WM_CLOSE, IntPtr.Zero, IntPtr.Zero);
+        }
     }
 }

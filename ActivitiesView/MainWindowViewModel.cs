@@ -18,6 +18,7 @@ namespace ActivitiesView
         private readonly StatelessCommand _closeViewCommand;
         private readonly StatelessCommand _launchCommand;
         private readonly StatelessCommand _selectWindowCommand;
+        private readonly StatelessCommand _closeWindowCommand;
 
         public MainWindowViewModel()
         {
@@ -34,6 +35,7 @@ namespace ActivitiesView
                 ((DesktopWindow)o).BringToForeground();
                 Application.Current.MainWindow.Close();
             });
+            _closeWindowCommand = new StatelessCommand((o) => ((DesktopWindow)o).Close());
 
             StringBuilder buffer = new StringBuilder(Win32.MAX_PATH);
             IEnumerable<string> e;
@@ -71,5 +73,6 @@ namespace ActivitiesView
         public StatelessCommand CloseViewCommand { get => _closeViewCommand; }
         public StatelessCommand LaunchCommand { get => _launchCommand; }
         public StatelessCommand SelectWindowCommand { get => _selectWindowCommand; }
+        public StatelessCommand CloseWindowCommand { get => _closeWindowCommand; }
     }
 }

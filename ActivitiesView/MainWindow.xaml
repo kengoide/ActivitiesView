@@ -96,12 +96,17 @@
                             </b:EventTrigger>
                         </b:Interaction.Triggers>
                         <Grid Width="400">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="25"/>
+                            </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="25"/>
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
-                            <Label Grid.Row="0" Content="{Binding WindowText}" Background="Transparent" Foreground="WhiteSmoke"/>
-                            <local:ThumbnailHost Grid.Row="1" Height="320" SourceHwnd="{Binding Hwnd}"/>
+                            <Label Grid.Column="0" Grid.Row="0" Content="{Binding WindowText}" Background="Transparent" Foreground="WhiteSmoke"/>
+                            <Button Grid.Column="1" Grid.Row="0" Command="{Binding DataContext.CloseWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}">×</Button>
+                            <local:ThumbnailHost Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Height="320" SourceHwnd="{Binding Hwnd}"/>
                         </Grid>
                     </Border>
                 </DataTemplate>
