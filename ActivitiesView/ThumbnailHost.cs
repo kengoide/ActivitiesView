@@ -10,16 +10,13 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Xaml;
 
-namespace ActivitiesView
-{
-    class ThumbnailHost : FrameworkElement
-    {
+namespace ActivitiesView {
+    class ThumbnailHost : FrameworkElement {
         private HwndSource _destinationHwndSource;
         private IntPtr _hthumbnail;
         private Win32.DWM_THUMBNAIL_PROPERTIES _thumbnailProperties;
 
-        public ThumbnailHost() : base()
-        {
+        public ThumbnailHost() : base() {
             _destinationHwndSource = null;
             _hthumbnail = IntPtr.Zero;
             _thumbnailProperties = new Win32.DWM_THUMBNAIL_PROPERTIES();
@@ -27,8 +24,7 @@ namespace ActivitiesView
             _thumbnailProperties.fVisible = true;
         }
 
-        public IntPtr SourceHwnd
-        {
+        public IntPtr SourceHwnd {
             get => (IntPtr)GetValue(SourceHwndProperty);
             set => SetValue(SourceHwndProperty, value);
         }
@@ -37,17 +33,14 @@ namespace ActivitiesView
             DependencyProperty.Register("SourceHwnd", typeof(IntPtr), typeof(ThumbnailHost),
                 new PropertyMetadata(IntPtr.Zero, OnSourceHwndChanged));
 
-        private static void OnSourceHwndChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
+        private static void OnSourceHwndChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
             (d as ThumbnailHost)?.RegisterThumbnail();
         }
 
-        private void RegisterThumbnail()
-        {
+        private void RegisterThumbnail() {
             if (_destinationHwndSource == null)
                 return;
-            if (_hthumbnail != IntPtr.Zero)
-            {
+            if (_hthumbnail != IntPtr.Zero) {
                 Win32.DwmUnregisterThumbnail(_hthumbnail);
                 _hthumbnail = IntPtr.Zero;
             }
@@ -56,26 +49,22 @@ namespace ActivitiesView
             _hthumbnail = Win32.DwmRegisterThumbnail(_destinationHwndSource.Handle, SourceHwnd);
         }
 
-        protected override Size MeasureOverride(Size availableSize)
-        {
+        protected override Size MeasureOverride(Size availableSize) {
             return availableSize;
         }
 
-        protected override Size ArrangeOverride(Size finalSize)
-        {
+        protected override Size ArrangeOverride(Size finalSize) {
             if (_hthumbnail == IntPtr.Zero)
                 return finalSize;
 
             Win32.SIZE thumbnailSize;
             Win32.DwmQueryThumbnailSourceSize(_hthumbnail, out thumbnailSize);
             double aspectRatio = (double)thumbnailSize.cx / (double)thumbnailSize.cy;
-            if (aspectRatio > 1)
-            {
+            if (aspectRatio > 1) {
                 // Thumbnail is wide.
                 finalSize.Height /= aspectRatio;
             }
-            else
-            {
+            else {
                 // Thumbnail is tall.
                 finalSize.Width *= aspectRatio;
             }
@@ -90,8 +79,7 @@ namespace ActivitiesView
             return finalSize;
         }
 
-        protected override void OnVisualParentChanged(DependencyObject oldParent)
-        {
+        protected override void OnVisualParentChanged(DependencyObject oldParent) {
             base.OnVisualParentChanged(oldParent);
 
             // Find the root in Visual tree.
@@ -100,30 +88,26 @@ namespace ActivitiesView
             while ((parentVisual = VisualTreeHelper.GetParent(visual)) != null) {
                 visual = parentVisual;
             }
-            if (!(visual is Window))
-            {
+            if (!(visual is Window)) {
                 Debug.WriteLine("Couldn't find a Window in the visual tree. ThumbnailHost must be a descendant of a Window.");
                 _destinationHwndSource = null;
                 return;
             }
 
             IntPtr hwnd = new WindowInteropHelper((Window)visual).Handle;
-            if (_destinationHwndSource != null && hwnd == _destinationHwndSource.Handle)
-            {
+            if (_destinationHwndSource != null && hwnd == _destinationHwndSource.Handle) {
                 // Root Visual hasn't changed. no-op.
                 return;
             }
 
-            if (_destinationHwndSource != null)
-            {
+            if (_destinationHwndSource != null) {
                 _destinationHwndSource.Dispose();
             }
             _destinationHwndSource = HwndSource.FromHwnd(hwnd);
             RegisterThumbnail();
         }
 
-        protected override void OnRender(DrawingContext drawingContext)
-        {
+        protected override void OnRender(DrawingContext drawingContext) {
             drawingContext.DrawRectangle(Brushes.LightYellow, null, new Rect(0, 0, ActualWidth, ActualHeight));
         }
     }

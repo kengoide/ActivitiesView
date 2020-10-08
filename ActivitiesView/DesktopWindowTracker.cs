@@ -7,14 +7,11 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ActivitiesView
-{
-    class DesktopWindowTracker
-    {
+namespace ActivitiesView {
+    class DesktopWindowTracker {
         private readonly ObservableCollection<DesktopWindow> _windows;
 
-        public DesktopWindowTracker()
-        {
+        public DesktopWindowTracker() {
             _windows = new ObservableCollection<DesktopWindow>();
             GCHandle gch = GCHandle.Alloc(this);
             Win32.EnumDesktopWindows(IntPtr.Zero, EnumDesktopProc, GCHandle.ToIntPtr(gch));
@@ -25,17 +22,14 @@ namespace ActivitiesView
 
         private static readonly StringBuilder buffer = new StringBuilder(64);
 
-        private static bool EnumDesktopProc(IntPtr hwnd, IntPtr lParam)
-        {
+        private static bool EnumDesktopProc(IntPtr hwnd, IntPtr lParam) {
             Win32.GetClassNameW(hwnd, buffer, buffer.Capacity);
             if (buffer.ToString() == "Windows.UI.Core.CoreWindow")
                 return true;
-            if (buffer.ToString() == "ApplicationFrameWindow")
-            {
+            if (buffer.ToString() == "ApplicationFrameWindow") {
                 // UWP application.
                 bool isPhantom = true;
-                Win32.EnumChildWindows(hwnd, (hwndChild, _) =>
-                {
+                Win32.EnumChildWindows(hwnd, (hwndChild, _) => {
                     Win32.GetClassNameW(hwndChild, buffer, buffer.Capacity);
                     if (buffer.ToString() == "Windows.UI.Core.CoreWindow")
                         isPhantom = false;

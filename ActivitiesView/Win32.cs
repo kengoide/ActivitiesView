@@ -2,38 +2,31 @@
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace ActivitiesView
-{
-    class Win32
-    {
+namespace ActivitiesView {
+    class Win32 {
         [StructLayout(LayoutKind.Sequential)]
-        public struct SIZE
-        {
+        public struct SIZE {
             public int cx, cy;
 
-            public SIZE(int cx, int cy)
-            {
+            public SIZE(int cx, int cy) {
                 this.cx = cx;
                 this.cy = cy;
             }
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct RECT
-        {
+        public struct RECT {
             public int left, top, right, bottom;
 
-            public RECT(int left, int top, int right, int bottom)
-            {
+            public RECT(int left, int top, int right, int bottom) {
                 this.left = left;
                 this.top = top;
                 this.right = right;
                 this.bottom = bottom;
             }
 
-            public override string ToString()
-            {
-                return "(" + left.ToString() + "," + top.ToString() + "," + right.ToString() + "," + bottom.ToString() + ")"; 
+            public override string ToString() {
+                return "(" + left.ToString() + "," + top.ToString() + "," + right.ToString() + "," + bottom.ToString() + ")";
             }
         }
 
@@ -52,8 +45,7 @@ namespace ActivitiesView
         public const uint DWM_TNP_VISIBLE = 0x00000008;
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct DWM_THUMBNAIL_PROPERTIES
-        {
+        public struct DWM_THUMBNAIL_PROPERTIES {
             public uint dwFlags;
             public RECT rcDestination;
             public RECT rcSource;
@@ -75,8 +67,7 @@ namespace ActivitiesView
         [ComImport]
         [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
         [Guid("000214f9-0000-0000-c000-000000000046")]
-        public interface IShellLinkW
-        {
+        public interface IShellLinkW {
             void GetPath([MarshalAs(UnmanagedType.LPWStr), Out] StringBuilder pszFile, int cch, IntPtr pfd, uint fFlags);
             IntPtr GetIDList();
             void SetIDList(IntPtr pidl);
@@ -102,8 +93,7 @@ namespace ActivitiesView
         [ComImport]
         [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
         [Guid("0000010b-0000-0000-C000-000000000046")]
-        public interface IPersistFile // : IPersist
-        {
+        public interface IPersistFile /* : IPersist */ {
             // IPersist
             Guid GetClassID();
             // IPersistFile
@@ -119,15 +109,14 @@ namespace ActivitiesView
         [ComImport]
         [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
         [Guid("bcc18b79-ba16-442f-80c4-8a59c30c463b")]
-        public interface IShellItemImageFactory
-        {
+        public interface IShellItemImageFactory {
             IntPtr GetImage(SIZE size, uint flags);
         }
 
         [DllImport("shell32.dll", CharSet = CharSet.Unicode, PreserveSig = false)]
         [return: MarshalAs(UnmanagedType.IUnknown)]
         public static extern object SHCreateItemFromParsingName([In] string pszPath, IntPtr pbc, [MarshalAs(UnmanagedType.LPStruct)] Guid riid);
-        
+
         [DllImport("user32.dll", CharSet = CharSet.Unicode, ExactSpelling = true)]
         public static extern int GetClassNameW(IntPtr hWnd,
             [MarshalAs(UnmanagedType.LPWStr), Out] StringBuilder lpClassName, int nMaxCount);

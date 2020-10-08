@@ -9,10 +9,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interop;
 
-namespace ActivitiesView
-{
-    class MainWindowViewModel
-    {
+namespace ActivitiesView {
+    class MainWindowViewModel {
         private readonly ObservableCollection<DockItem> _dockItems;
         private readonly DesktopWindowTracker _windowTracker;
         private readonly StatelessCommand _closeViewCommand;
@@ -20,18 +18,15 @@ namespace ActivitiesView
         private readonly StatelessCommand _selectWindowCommand;
         private readonly StatelessCommand _closeWindowCommand;
 
-        public MainWindowViewModel()
-        {
+        public MainWindowViewModel() {
             _dockItems = new ObservableCollection<DockItem>();
             _windowTracker = new DesktopWindowTracker();
             _closeViewCommand = new StatelessCommand(() => Application.Current.MainWindow.Close());
-            _launchCommand = new StatelessCommand((o) =>
-            {
+            _launchCommand = new StatelessCommand((o) => {
                 ((DockItem)o).Launch();
                 Application.Current.MainWindow.Close();
             });
-            _selectWindowCommand = new StatelessCommand((o) =>
-            {
+            _selectWindowCommand = new StatelessCommand((o) => {
                 ((DesktopWindow)o).BringToForeground();
                 Application.Current.MainWindow.Close();
             });
@@ -39,16 +34,13 @@ namespace ActivitiesView
 
             StringBuilder buffer = new StringBuilder(Win32.MAX_PATH);
             IEnumerable<string> e;
-            try
-            {
+            try {
                 e = Directory.EnumerateFiles("DockShortcuts");
             }
-            catch (DirectoryNotFoundException)
-            {
+            catch (DirectoryNotFoundException) {
                 return;
             }
-            foreach (string fileName in e.Where(name => name.EndsWith(".lnk")))
-            {
+            foreach (string fileName in e.Where(name => name.EndsWith(".lnk"))) {
                 string linkFilePath = AppDomain.CurrentDomain.BaseDirectory + fileName;
                 Win32.IShellLinkW shellLink = (Win32.IShellLinkW)new Win32.ShellLink();
                 Win32.IPersistFile persistFile = (Win32.IPersistFile)shellLink;
