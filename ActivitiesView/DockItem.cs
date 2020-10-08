@@ -11,7 +11,7 @@ using System.Windows.Interop;
 using System.Windows.Media.Imaging;
 
 namespace ActivitiesView {
-    class DockItem : DependencyObject {
+    class DockItem {
         private readonly string _filePath;
         private readonly string _displayName;
         private readonly string _description;
@@ -21,7 +21,7 @@ namespace ActivitiesView {
         public string Description { get => _description; }
 
         public DockItem(string executableFilePath, string arguments, string workingDirectory,
-                        string displayName, string description, int showCommand) : base() {
+                        string displayName, string description, int showCommand) {
             _filePath = executableFilePath;
             _displayName = displayName;
             _description = description;

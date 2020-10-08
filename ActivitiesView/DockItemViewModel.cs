@@ -12,7 +12,7 @@ namespace ActivitiesView {
         private readonly StatelessCommand _launchCommand;
 
         private static readonly DependencyPropertyKey ImagePropertyKey =
-            DependencyProperty.RegisterReadOnly("Image", typeof(BitmapSource), typeof(DockItem), new PropertyMetadata());
+            DependencyProperty.RegisterReadOnly("Image", typeof(BitmapSource), typeof(DockItemViewModel), new PropertyMetadata());
         public static readonly DependencyProperty ImageProperty = ImagePropertyKey.DependencyProperty;
 
         public StatelessCommand LaunchCommand { get => _launchCommand; }
