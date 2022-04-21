@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -56,6 +57,49 @@ namespace ActivitiesView {
 
         [DllImport("dwmapi.dll", PreserveSig = false)]
         public static extern void DwmUpdateThumbnailProperties(IntPtr hThumbnailId, [In] ref DWM_THUMBNAIL_PROPERTIES ptnProperties);
+
+        public const uint GENERIC_READ = 0x80000000;
+        public const uint OPEN_EXISTING = 3;
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, ExactSpelling = true)]
+        public static extern IntPtr CreateFileW([MarshalAs(UnmanagedType.LPWStr), In] string lpFileName, uint dwDesiredAccess,
+            uint dwShareMode, IntPtr lpSecurityAttributes, uint dwCreateDisposition, uint dwFlagsAndAttributes, IntPtr hTemplateFile);
+
+#pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
+        [StructLayout(LayoutKind.Sequential)]
+        public struct FILE_ID_128 {
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)]
+            public byte[] Identifier;
+
+            public override bool Equals(object obj) {
+                if (obj == null || obj.GetType() != typeof(FILE_ID_128))
+                    return false;
+                FILE_ID_128 other = (FILE_ID_128)obj;
+                for (int i = 0; i < 16; ++i) {
+                    if (Identifier[i] != other.Identifier[i])
+                        return false;
+                }
+                return true;
+            }
+        }
+        [StructLayout(LayoutKind.Sequential)]
+        public struct FILE_ID_INFO {
+            public ulong VolumeSerialNumber;
+            public FILE_ID_128 FileId;
+
+            public override bool Equals(object obj) {
+                if (obj == null || obj.GetType() != typeof(FILE_ID_INFO))
+                    return false;
+                FILE_ID_INFO info = (FILE_ID_INFO)obj;
+                return VolumeSerialNumber == info.VolumeSerialNumber && FileId.Equals(info.FileId);
+            }
+        }
+#pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
+
+        [DllImport("kernel32.dll")]
+        public static extern bool GetFileInformationByHandleEx(IntPtr hFile, uint FileInformationClass, [MarshalAs(UnmanagedType.LPStruct)] out object lpFileInformation, uint dwBufferSize);
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, ExactSpelling = true)]
+        public static extern uint GetModuleFileNameW(IntPtr hModule, [MarshalAs(UnmanagedType.LPWStr), Out] StringBuilder lpFilename, int nSize);
 
         [ComImport]
         [Guid("00021401-0000-0000-c000-000000000046")]
@@ -130,11 +174,14 @@ namespace ActivitiesView {
         public const uint WS_EX_TOOLWINDOW = 0x00000080;
         public const uint WS_EX_APPWINDOW = 0x00040000;
 
+        public const int GWLP_HINSTANCE = -6;
         public const int GWL_STYLE = -16;
         public const int GWL_EXSTYLE = -20;
 
         [DllImport("user32.dll", CharSet = CharSet.Unicode, ExactSpelling = true)]
         public static extern uint GetWindowLongW(IntPtr hWnd, int nIndex);
+        [DllImport("user32.dll", CharSet = CharSet.Unicode, ExactSpelling = true)]
+        public static extern IntPtr GetWindowLongPtrW(IntPtr hWnd, int nIndex);
 
         public const int WM_CLOSE = 0x0010;
 
